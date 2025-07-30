@@ -1,0 +1,24 @@
+{
+  "name": "nbafantasy",
+  "version": "1.0.0",
+  "description": "API REST AUTH Project for Rcok The Code within a enviroment around a fictional NBA fantasy game web",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "playersSeed": "node ./src/utils/seeds/players.seed.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.18.0",
+    "mongoose": "^8.16.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
