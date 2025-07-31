@@ -1,3 +1,6 @@
+const {
+  deleteImgCloudinary
+} = require('../../utils/eliminations/img.elimination')
 const User = require('../models/user.model')
 const mongoose = require('mongoose')
 
@@ -49,6 +52,11 @@ exports.createUser = async (req, res) => {
       ...rest,
       role: 'user'
     })
+
+    if (req.file) {
+      newUser.avatarURL = req.file.path
+    }
+
     const userSaved = await newUser.save()
     return res.status(201).json(userSaved)
   } catch (error) {
@@ -66,6 +74,13 @@ exports.updateUser = async (req, res) => {
   const { role, ...updates } = req.body
 
   try {
+    if (req.file) {
+      newUser.avatarURL = req.file.path
+      const oldUser = await User.findById(id)
+
+      deleteImgCloudinary(oldUser.avatarURL)
+    }
+
     const userUpdated = await User.findByIdAndUpdate(id, updates, {
       new: true
     })

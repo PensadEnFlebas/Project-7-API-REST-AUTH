@@ -1,3 +1,6 @@
+const {
+  deleteImgCloudinary
+} = require('../../utils/eliminations/img.elimination')
 const Player = require('../models/player.model')
 const mongoose = require('mongoose')
 
@@ -40,6 +43,11 @@ exports.getPlayerById = async (req, res) => {
 exports.createPlayer = async (req, res) => {
   try {
     const newPlayer = new Player(req.body)
+
+    if (req.file) {
+      newPlayer.imgURL = req.file.path
+    }
+
     const playerSaved = await newPlayer.save()
     return res.status(201).json(playerSaved)
   } catch (error) {
@@ -52,6 +60,14 @@ exports.updatePlayer = async (req, res) => {
     const { id } = req.params
     const newPlayer = new Player(req.body)
     newPlayer._id = id
+
+    if (req.file) {
+      newPlayer.imgURL = req.file.path
+      const oldPlayer = await Player.findById(id)
+
+      deleteImgCloudinary(oldPlayer.imgURL)
+    }
+
     const playerUpdated = await Player.findByIdAndUpdate(id, newPlayer, {
       new: true
     })
@@ -67,6 +83,9 @@ exports.deletePlayer = async (req, res) => {
     const newPlayer = new Player(req.body)
     newPlayer._id = id
     const playerDeleted = await Player.findByIdAndDelete(id)
+
+    deleteImgCloudinary(playerDeleted.imgURL)
+
     return res
       .status(201)
       .json({ message: 'Player deleted ✅', playerDeleted: playerDeleted })

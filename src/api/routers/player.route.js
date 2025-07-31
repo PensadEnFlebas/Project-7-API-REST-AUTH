@@ -7,11 +7,24 @@ const {
   updatePlayer,
   deletePlayer
 } = require('../controllers/player.controller')
+const { uploadPlayerImg } = require('../../middlewares/file.uploadPlayerImg')
 
 playerRouter.get('/', getAllPlayers)
 playerRouter.get('/:id', isAuth, getPlayerById)
-playerRouter.post('/', isAuth, isAdmin, createPlayer)
-playerRouter.put('/:id', isAuth, isAdmin, updatePlayer)
+playerRouter.post(
+  '/',
+  isAuth,
+  isAdmin,
+  uploadPlayerImg.single('imgURL'),
+  createPlayer
+)
+playerRouter.put(
+  '/:id',
+  isAuth,
+  isAdmin,
+  uploadPlayerImg.single('imgURL'),
+  updatePlayer
+)
 playerRouter.delete('/:id', isAuth, isAdmin, deletePlayer)
 
 module.exports = playerRouter

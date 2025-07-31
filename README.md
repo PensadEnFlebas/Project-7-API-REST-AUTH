@@ -14,10 +14,13 @@ nbafantasy/
 │ │ ├── controllers/ → Lógica de negocio de cada recurso
 │ │ ├── models/ → Esquemas de Mongoose
 │ │ └── routes/ → Endpoints de la API
-│ ├── config/ → Configuración del servidor y entorno
+│ ├── config/ → Configuración del servidor, Cloudinary y entorno
+│ ├── data/ → base de datos para alimentar semilla
+│ ├── middlewares/ → gestión de permisos y subida de imágenes
 │ ├── db/ → Conexión a MongoDB
-│ └── utils/
-│ └── seeds/ → Scripts para poblar la base de datos inicial de jugadores (recomendado no subir a Git)
+│ └──  utils/
+│ │ ├── eliminations/ → función de eliminación de archivos de Cloudinary
+│ │ └── seeds/ → Scripts para poblar la base de datos inicial de jugadores (recomendado no subir a Git)
 ├── .env → Variables de entorno (no subir a Git)
 ├── index.js → Punto de entrada del servidor
 ├── package.json → Dependencias y scripts
@@ -36,6 +39,8 @@ nbafantasy/
 - **Nodemon** para desarrollo en caliente.
 - **bcrypt** para hashear y proteger contraseñas de usuarios.
 - **JWT (JSON Web Tokens)** para autenticación y manejo seguro de sesiones.
+- **Multer** middleware para gestionar la subida de archivos desde formularios.
+- **Cloudinary** servicio en la nube para almacenar y gestionar imágenes de forma eficiente.
 - **Insomnia** cliente HTTP para testear endpoints de forma rápida y visual.
 
 ---
@@ -54,6 +59,15 @@ Los administradores pueden promover usuarios a admin y eliminar usuarios, mientr
 
 ---
 
+## 📁 Subida de imágenes
+
+Este proyecto permite subir imágenes de los jugadores, de los escudos de los equipos creados por los usuarios y de los avatares de los usuarios a **Cloudinary** gracias a **multer** y **multer-storage-cloudinary**.
+
+- Las imágenes se almacenan en carpetas independientes: **NBAfantasyPLAYERS**, **NBAfantasyTEAMS** y **NBAfantasyUSERS** en tu cuenta de Cloudinary.
+- Al actualizar o eliminar una imagen, la imagen previa se borra automáticamente de **Cloudinary**.
+
+---
+
 ## 📦 Requisitos para el entorno
 
 Tener **Node.js** instalado
@@ -68,8 +82,8 @@ Recomendado: tener instalado **Insomnia** o **Postman** para testear las rutas
 
 ```bash
 Primero **Clona el repositorio**:
-git clone https://github.com/PensadEnFlebas/Project-7-API-REST-AUTH
-cd Project-7-API-REST-AUTH
+git clone https://github.com/PensadEnFlebas/Project-8-API-REST-FILES
+cd Project-8-API-REST-FILES
 
 Instala las dependencias:
 npm install
@@ -124,9 +138,13 @@ DELETE /api/users/:id — Elimina un usuario (admins pueden eliminar a otros, us
 PATCH /api/users/:id/role — Cambia el rol de un usuario (solo admins).
 
 🖼️ Gestión de imágenes
-Las fotos de jugadores se almacenan en la carpeta /assets. Al crear o actualizar un recurso, la propiedad "imgURL" debe tener un valor como:
+Las fotos de jugadores de la semilla se almacenan en la carpeta /assets. Al crear o actualizar un recurso basado en esa semilla, la propiedad "imgURL" debe tener un valor como:
 
 "imgURL": "/assets/players/trae_young.png"
+
+Las imágenes de jugadores creados por el usuario, los avatares de los usuarios y los escudos de los equipos creados a través de los endpoints se gestionan mediante Cloudinary, usando el middleware de Multer.
+
+Al enviar una petición POST o PUT a los endpoints correspondientes _players, teams o users_, puedes adjuntar una imagen como archivo en el campo imgURL (jugadores), avatarURL (usuarios) o shieldURL (equipos). Esta imagen será automáticamente subida a Cloudinary y se almacenará su URL pública en la base de datos (y eliminada cuando se modifica o borra desde un formulario).
 
 ✅ Recomendaciones
 Añade validaciones a los modelos para asegurar consistencia.
@@ -136,5 +154,5 @@ No subas el archivo .env al repositorio.
 Usa populate() para mostrar referencias relacionadas en las respuestas (jugadores de un equipo, etc)
 
 📬 Autor
-Creado por Juanma "Goblin" Martínez como proyecto 7 de Rock-The-Code.
+Creado por Juanma "Goblin" Martínez como proyecto 8 de Rock-The-Code.
 ```

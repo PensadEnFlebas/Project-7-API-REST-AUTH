@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema(
       enum: ['user', 'admin'],
       default: 'user'
     },
-    avatarURL: { type: String, required: true },
+    avatarURL: { type: String, trim: true, required: true, default: '' },
     team: { type: mongoose.Schema.Types.ObjectId, ref: 'Team' },
     players: [
       { type: mongoose.Schema.Types.ObjectId, ref: 'Player', default: [] }

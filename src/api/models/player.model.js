@@ -55,7 +55,7 @@ const playerSchema = new mongoose.Schema(
     },
     realTeam: String,
     nbaFantasyTeam: { type: String, required: true, default: '' },
-    imgURL: { type: String, required: true },
+    imgURL: { type: String, trim: true, required: true, default: '' },
     stats: {
       gp: { type: Number, required: true },
       min: { type: Number, required: true },

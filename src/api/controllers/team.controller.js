@@ -1,3 +1,6 @@
+const {
+  deleteImgCloudinary
+} = require('../../utils/eliminations/img.elimination')
 const Team = require('../models/team.model')
 const mongoose = require('mongoose')
 
@@ -45,6 +48,11 @@ exports.getTeamById = async (req, res) => {
 exports.createTeam = async (req, res) => {
   try {
     const newTeam = new Team(req.body)
+
+    if (req.file) {
+      newTeam.shieldURL = req.file.path
+    }
+
     const teamSaved = await newTeam.save()
     return res.status(201).json(teamSaved)
   } catch (error) {
@@ -57,6 +65,14 @@ exports.updateTeam = async (req, res) => {
     const { id } = req.params
     const newTeam = new Team(req.body)
     newTeam._id = id
+
+    if (req.file) {
+      newTeam.shieldURL = req.file.path
+      const oldTeam = await Team.findById(id)
+
+      deleteImgCloudinary(oldTeam.shieldURL)
+    }
+
     const teamUpdated = await Team.findByIdAndUpdate(id, newTeam, {
       new: true
     })
