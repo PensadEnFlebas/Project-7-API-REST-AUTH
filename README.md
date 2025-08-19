@@ -81,44 +81,34 @@ Recomendado: tener instalado **[Insomnia](https://insomnia.rest/)** o **[Postman
 
 ## 🔧 Instalación y uso
 
-```bash
 Primero clona el repositorio:
-```
 
 ```sh
 git clone https://github.com/PensadEnFlebas/Project-8-API-REST-FILES
 cd Project-8-API-REST-FILES
 ```
 
-```bash
 Instala las dependencias:
-```
 
 ```sh
 npm install
 ```
 
-```bash
 Crea un archivo .env en la raíz del proyecto:
-```
 
 ```sh
 PORT=3000   # opcional
 DB_URL=mongodb+srv://<usuario>:<contraseña>@<cluster>.mongodb.net/nbafantasy
 ```
 
-```bash
 Ejecuta el servidor en modo desarrollo:
-```
 
 ```sh
 npm run dev
 ```
 
-```bash
 🌱 Poblar la base de datos
 Utiliza los scripts de seeds para insertar datos iniciales:
-```
 
 ```sh
 npm run playersSeed
@@ -170,16 +160,15 @@ Las fotos de jugadores de la semilla se almacenan en la carpeta /assets como bac
 "imgURL": "/assets/players/trae_young.png"
 ```
 
-```bash
 Las imágenes de jugadores creados por el usuario, los avatares de los usuarios y los escudos de los equipos creados a través de los endpoints se gestionan mediante **Cloudinary**, usando el middleware de _Multer_.
 
 Al enviar una petición POST o PUT a los endpoints correspondientes _players, teams o users_, puedes adjuntar una imagen como archivo en el campo imgURL (jugadores), avatarURL (usuarios) o shieldURL (equipos). Esta imagen será automáticamente subida a Cloudinary y se almacenará su URL pública en la base de datos (y eliminada cuando se modifica o borra desde un formulario).
 
 ✅ Recomendaciones
+
 > Añade validaciones a los modelos para asegurar consistencia.
 > No subas el archivo .env al repositorio.
 > Usa populate() para mostrar referencias relacionadas en las respuestas (jugadores de un equipo, etc)
-```
 
 ## 📬 Autor
 
