@@ -12,11 +12,6 @@ const playerSchema = new mongoose.Schema(
       required: true,
       uppercase: true,
       enum: ALLOWED_POSITIONS,
-      // set: (positions) => {
-      //   return positions.map((pos) =>
-      //     typeof pos === 'string' ? pos.toUpperCase() : pos
-      //   )
-      // },
       validate: {
         validator: function (positions) {
           if (!Array.isArray(positions)) return false
@@ -37,19 +32,6 @@ const playerSchema = new mongoose.Schema(
             )
             return false
           }
-
-          // const invalidValues = positions.filter(
-          //   (pos) => !ALLOWED_POSITIONS.includes(pos)
-          // )
-          // if (invalidValues.length > 0) {
-          //   this.invalidate(
-          //     'position',
-          //     `Las siguientes posiciones no son válidas: ${invalidValues.join(
-          //       ', '
-          //     )}. Opciones válidas: ${ALLOWED_POSITIONS.join(', ')}.`
-          //   )
-          //   return false
-          // }
 
           return true
         }
