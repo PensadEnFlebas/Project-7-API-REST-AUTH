@@ -1,4 +1,7 @@
-const Player = require('../models/player.model')
+const {
+  deleteImgCloudinary
+} = require('../../utils/eliminations/img.elimination')
+const { Player, ALLOWED_POSITIONS } = require('../models/player.model')
 const mongoose = require('mongoose')
 
 exports.getAllPlayers = async (req, res) => {
@@ -9,7 +12,9 @@ exports.getAllPlayers = async (req, res) => {
     })
     return res.status(200).json(players)
   } catch (error) {
-    return res.status(400).json('Ha ocurrido un error ❌')
+    return res
+      .status(400)
+      .json('Ha ocurrido un error recopilando todos los jugadores ❌')
   }
 }
 
@@ -32,7 +37,6 @@ exports.getPlayerById = async (req, res) => {
 
     return res.status(200).json(player)
   } catch (error) {
-    console.error(error)
     return res.status(400).json('Error al obtener el jugador ❌')
   }
 }
@@ -40,37 +44,97 @@ exports.getPlayerById = async (req, res) => {
 exports.createPlayer = async (req, res) => {
   try {
     const newPlayer = new Player(req.body)
+
+    if (req.file) {
+      newPlayer.imgURL = req.file.path
+    }
+
     const playerSaved = await newPlayer.save()
     return res.status(201).json(playerSaved)
   } catch (error) {
-    return res.status(400).json('Ha ocurrido un error ❌')
+    return res.status(400).json('Ha ocurrido un error al crear un jugador ❌')
   }
 }
 
 exports.updatePlayer = async (req, res) => {
   try {
     const { id } = req.params
-    const newPlayer = new Player(req.body)
-    newPlayer._id = id
-    const playerUpdated = await Player.findByIdAndUpdate(id, newPlayer, {
-      new: true
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json('ID no válido ❌')
+    }
+
+    const updatedPlayer = await Player.findByIdAndUpdate(id, data, {
+      new: true,
+      runValidators: true
     })
-    return res.status(201).json(playerUpdated)
+
+    if (!updatedPlayer) return res.status(404).json('Jugador no encontrado ❌')
+
+    res.status(200).json({
+      message: `Jugador ${updatedPlayer.name} actualizado correctamente ✅`,
+      player: updatedPlayer
+    })
   } catch (error) {
-    return res.status(400).json('Ha ocurrido un error ❌')
+    res.status(400).json('Error al actualizar el jugador ❌')
+  }
+}
+
+exports.removeDataFromPlayerArray = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { field, value } = req.body
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json('ID de jugador no válido ❌')
+    }
+
+    const player = await Player.findById(id)
+
+    if (!player) return res.status(404).json('Jugador no encontrado ❌')
+
+    if (!Array.isArray(player[field])) {
+      return res.status(400).json(`${field} no es un array ❌`)
+    }
+
+    if (field === 'position' && player[field].length <= 1) {
+      return res
+        .status(400)
+        .json('❌ El jugador debe tener al menos 1️⃣ posición 🏀')
+    }
+
+    player[field] = player[field].filter((item) => item !== value)
+    await player.save()
+    return res
+      .status(200)
+      .json({ message: 'Dato borrado ok del array ✅', player })
+  } catch (error) {
+    return res.status(500).json('Error al eliminar el dato del jugador ❌')
   }
 }
 
 exports.deletePlayer = async (req, res) => {
   try {
     const { id } = req.params
-    const newPlayer = new Player(req.body)
-    newPlayer._id = id
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json('ID no válido ❌')
+    }
+
     const playerDeleted = await Player.findByIdAndDelete(id)
+
+    if (!playerDeleted) {
+      return res.status(404).json('Jugador no encontrado ❌')
+    }
+
+    if (playerDeleted.imgURL) {
+      await deleteImgCloudinary(playerDeleted.imgURL)
+    }
+
     return res
-      .status(201)
-      .json({ message: 'Player deleted ✅', playerDeleted: playerDeleted })
+      .status(200)
+      .json({ message: 'Jugador borrado ✅', playerDeleted })
   } catch (error) {
-    return res.status(400).json('Ha ocurrido un error ❌')
+    return res.status(400).json('Ha ocurrido un error eliminando el jugador ❌')
   }
 }

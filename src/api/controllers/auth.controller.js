@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user.model')
-const generateToken = require('../../config/jwt')
+const { generateToken } = require('../../config/jwt')
 
 exports.register = async (req, res) => {
   try {
@@ -39,8 +39,12 @@ exports.register = async (req, res) => {
       message: 'Usuario creado ✅',
       user: {
         id: savedUser._id,
+        name: savedUser.name,
         email: savedUser.email,
-        nickname: savedUser.nickname
+        nickname: savedUser.nickname,
+        avatarURL: savedUser.avatarURL,
+        country: savedUser.country,
+        yearOfRegistration: savedUser.yearOfRegistration
       }
     })
   } catch (error) {
@@ -52,17 +56,24 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body
 
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: 'Email y contraseña son obligatorios ❌' })
+    }
+
     const user = await User.findOne({ email }).select('+password')
     if (!user)
       return res
         .status(401)
         .json({ message: 'Usuario o contraseña incorrectos ❌' })
 
-    const isMatch = bcrypt.compareSync(password, user.password)
-    if (!isMatch)
+    const isMatch = bcrypt.compareSync(password.trim(), user.password)
+    if (!isMatch) {
       return res
         .status(401)
         .json({ message: 'Usuario o contraseña incorrectos ❌' })
+    }
 
     const token = generateToken(user)
 
@@ -72,6 +83,7 @@ exports.login = async (req, res) => {
       user: {
         id: user._id,
         email: user.email,
+        nickname: user.nickname,
         role: user.role || 'user'
       }
     })

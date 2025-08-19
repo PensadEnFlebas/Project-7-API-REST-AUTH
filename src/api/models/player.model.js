@@ -10,19 +10,21 @@ const playerSchema = new mongoose.Schema(
     position: {
       type: [String],
       required: true,
-      set: (positions) => {
-        return positions.map((pos) =>
-          typeof pos === 'string' ? pos.toUpperCase() : pos
-        )
-      },
+      uppercase: true,
+      enum: ALLOWED_POSITIONS,
+      // set: (positions) => {
+      //   return positions.map((pos) =>
+      //     typeof pos === 'string' ? pos.toUpperCase() : pos
+      //   )
+      // },
       validate: {
         validator: function (positions) {
           if (!Array.isArray(positions)) return false
 
-          if (positions.length > 3) {
+          if (positions.length > 2) {
             this.invalidate(
               'position',
-              'Un jugador no puede tener más de 3 posiciones.'
+              'Un jugador no puede tener más de 2️⃣ posiciones ❌'
             )
             return false
           }
@@ -31,31 +33,31 @@ const playerSchema = new mongoose.Schema(
           if (unique.size !== positions.length) {
             this.invalidate(
               'position',
-              'Las posiciones no pueden estar repetidas.'
+              'Las posiciones no pueden estar repetidas ❌'
             )
             return false
           }
 
-          const invalidValues = positions.filter(
-            (pos) => !ALLOWED_POSITIONS.includes(pos)
-          )
-          if (invalidValues.length > 0) {
-            this.invalidate(
-              'position',
-              `Las siguientes posiciones no son válidas: ${invalidValues.join(
-                ', '
-              )}. Opciones válidas: ${ALLOWED_POSITIONS.join(', ')}.`
-            )
-            return false
-          }
+          // const invalidValues = positions.filter(
+          //   (pos) => !ALLOWED_POSITIONS.includes(pos)
+          // )
+          // if (invalidValues.length > 0) {
+          //   this.invalidate(
+          //     'position',
+          //     `Las siguientes posiciones no son válidas: ${invalidValues.join(
+          //       ', '
+          //     )}. Opciones válidas: ${ALLOWED_POSITIONS.join(', ')}.`
+          //   )
+          //   return false
+          // }
 
           return true
         }
       }
     },
     realTeam: String,
-    nbaFantasyTeam: { type: String, required: true, default: '' },
-    imgURL: { type: String, required: true },
+    nbaFantasyTeam: { type: String, default: null },
+    imgURL: { type: String, trim: true, required: true, default: '' },
     stats: {
       gp: { type: Number, required: true },
       min: { type: Number, required: true },
@@ -71,7 +73,11 @@ const playerSchema = new mongoose.Schema(
       pf: { type: Number, required: true },
       plusMinus: { type: Number, required: true }
     },
-    userProperty: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+    userProperty: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null
+    }
   },
   { timestamps: true, collection: 'players' }
 )

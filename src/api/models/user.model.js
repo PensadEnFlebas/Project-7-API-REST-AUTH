@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 
 const SALT_ROUNDS = 10
 
@@ -39,8 +40,12 @@ const userSchema = new mongoose.Schema(
       enum: ['user', 'admin'],
       default: 'user'
     },
-    avatarURL: { type: String, required: true },
-    team: { type: mongoose.Schema.Types.ObjectId, ref: 'Team' },
+    avatarURL: { type: String, trim: true, required: true, default: '' },
+    team: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Team',
+      default: null
+    },
     players: [
       { type: mongoose.Schema.Types.ObjectId, ref: 'Player', default: [] }
     ]
@@ -50,8 +55,14 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre('save', function (next) {
   if (!this.isModified('password')) return next()
-  this.password = bcrypt.hashSync(this.password, SALT_ROUNDS)
-  next()
+  if (this.password.startsWith('$2b$')) return next()
+  try {
+    const hashed = bcrypt.hashSync(this.password, SALT_ROUNDS)
+    this.password = hashed
+    next()
+  } catch (err) {
+    next(err)
+  }
 })
 
 module.exports = mongoose.model('User', userSchema)

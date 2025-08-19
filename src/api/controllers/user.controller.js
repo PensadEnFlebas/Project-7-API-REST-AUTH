@@ -1,3 +1,6 @@
+const {
+  deleteImgCloudinary
+} = require('../../utils/eliminations/img.elimination')
 const User = require('../models/user.model')
 const mongoose = require('mongoose')
 
@@ -23,8 +26,7 @@ exports.getUserById = async (req, res) => {
   }
 
   try {
-    const user = await user
-      .findById(id)
+    const user = await User.findById(id)
       .populate('players')
       .populate({
         path: 'team',
@@ -42,30 +44,31 @@ exports.getUserById = async (req, res) => {
   }
 }
 
-exports.createUser = async (req, res) => {
-  try {
-    const { role, ...rest } = req.body
-    const newUser = new User({
-      ...rest,
-      role: 'user'
-    })
-    const userSaved = await newUser.save()
-    return res.status(201).json(userSaved)
-  } catch (error) {
-    return res.status(400).json('Ha ocurrido un error al crear el usuario ❌')
-  }
-}
-
 exports.updateUser = async (req, res) => {
   const { id } = req.params
+  const isSelf = req.user.id === id
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json('ID no válido ❌')
   }
 
+  if (!isSelf) {
+    return res
+      .status(403)
+      .json('No tienes permisos para actualizar este usuario ❌')
+  }
+
   const { role, ...updates } = req.body
 
   try {
+    const userToUpdate = await User.findById(id)
+    if (!userToUpdate) return res.status(404).json('Usuario no encontrado ❌')
+
+    if (req.file) {
+      if (userToUpdate.avatarURL) deleteImgCloudinary(userToUpdate.avatarURL)
+      updates.avatarURL = req.file.path
+    }
+
     const userUpdated = await User.findByIdAndUpdate(id, updates, {
       new: true
     })
@@ -74,11 +77,50 @@ exports.updateUser = async (req, res) => {
       return res.status(404).json('Usuario no encontrado ❌')
     }
 
-    return res.status(201).json(userUpdated)
+    return res.status(201).json({
+      message: 'Usuario actualizado ✅',
+      user: userUpdated
+    })
   } catch (error) {
     return res
       .status(400)
       .json('Ha ocurrido un error actualizando el usuario ❌')
+  }
+}
+
+exports.removeDataFromUserArray = async (req, res) => {
+  try {
+    const { id } = req.params
+    const isSelf = req.user.id === id
+    const { field, value } = req.body
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json('ID de usuario no válido ❌')
+    }
+
+    if (!isSelf) {
+      return res
+        .status(403)
+        .json('No tienes permisos para eliminar datos de este usuario ❌')
+    }
+
+    const user = await User.findById(id)
+    if (!user) return res.status(404).json('Usuario no encontrado ❌')
+
+    if (!Array.isArray(user[field])) {
+      return res.status(400).json(`${field} no es un array ❌`)
+    }
+
+    if (field === 'roles' && user[field].length <= 1) {
+      return res.status(400).json('❌ El usuario debe tener al menos un rol')
+    }
+
+    user[field] = user[field].filter((item) => item !== value)
+    await user.save()
+
+    return res.status(200).json({ message: 'Dato borrado del array ✅', user })
+  } catch (error) {
+    return res.status(500).json('Error al eliminar el dato del usuario ❌')
   }
 }
 
@@ -127,6 +169,7 @@ exports.changeUserRole = async (req, res) => {
     )
     return res.status(200).json({
       message: 'Rol actualizado ✅',
+      nickname: updatedUser.nickname,
       user: updatedRole
     })
   } catch (error) {

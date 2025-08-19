@@ -6,8 +6,9 @@ const players = [
     height: 6.1,
     position: ['PG'],
     realTeam: 'Atlanta Hawks',
-    nbaFantasyTeam: '',
-    imgURL: '/assets/players/trae_young.png',
+    nbaFantasyTeam: null,
+    imgURL:
+      'https://res.cloudinary.com/dwjwglwsq/image/upload/v1755244600/trae_young_ds49u3.png',
     stats: {
       gp: 76,
       min: 36,
@@ -23,7 +24,7 @@ const players = [
       pf: 1.9,
       plusMinus: 0.4
     },
-    userProperty: ''
+    userProperty: null
   },
   {
     name: 'Dyson Daniels',
@@ -32,8 +33,9 @@ const players = [
     height: 6.7,
     position: ['PG', 'SG'],
     realTeam: 'Atlanta Hawks',
-    nbaFantasyTeam: '',
-    imgURL: '/assets/players/dyson_daniels.png',
+    nbaFantasyTeam: null,
+    imgURL:
+      'https://res.cloudinary.com/dwjwglwsq/image/upload/v1755244602/dyson_daniels_ubk0wf.png',
     stats: {
       gp: 76,
       min: 33.8,
@@ -49,7 +51,7 @@ const players = [
       pf: 2.3,
       plusMinus: -0.9
     },
-    userProperty: ''
+    userProperty: null
   },
   {
     name: 'Zaccharie Risacher',
@@ -58,8 +60,9 @@ const players = [
     height: 6.7,
     position: ['SF'],
     realTeam: 'Atlanta Hawks',
-    nbaFantasyTeam: '',
-    imgURL: '/assets/players/zaccharie_risacher.png',
+    nbaFantasyTeam: null,
+    imgURL:
+      'https://res.cloudinary.com/dwjwglwsq/image/upload/v1755244597/zaccharie_risacher_yodxlo.png',
     stats: {
       gp: 75,
       min: 24.6,
@@ -75,7 +78,7 @@ const players = [
       pf: 2,
       plusMinus: -1.6
     },
-    userProperty: ''
+    userProperty: null
   },
   {
     name: 'Tyrese Maxey',
@@ -84,8 +87,9 @@ const players = [
     height: 6.2,
     position: ['PG'],
     realTeam: 'Philadelphia 76ers',
-    nbaFantasyTeam: '',
-    imgURL: '/assets/players/tyrese_maxey.png',
+    nbaFantasyTeam: null,
+    imgURL:
+      'https://res.cloudinary.com/dwjwglwsq/image/upload/v1755244598/tyrese_maxey_kpufre.png',
     stats: {
       gp: 52,
       min: 37.7,
@@ -101,7 +105,7 @@ const players = [
       pf: 2.2,
       plusMinus: -2.4
     },
-    userProperty: ''
+    userProperty: null
   },
   {
     name: 'Shai Gilgeous-Alexander',
@@ -110,8 +114,9 @@ const players = [
     height: 6.6,
     position: ['PG'],
     realTeam: 'Oklahoma City Thunder',
-    nbaFantasyTeam: '',
-    imgURL: '/assets/players/shai_gilgeous_alexander.png',
+    nbaFantasyTeam: null,
+    imgURL:
+      'https://res.cloudinary.com/dwjwglwsq/image/upload/v1755244599/shai_gilgeous_alexander_s7hgmy.png',
     stats: {
       gp: 76,
       min: 34.2,
@@ -127,7 +132,7 @@ const players = [
       pf: 2.2,
       plusMinus: 12.1
     },
-    userProperty: ''
+    userProperty: null
   },
   {
     name: 'Jarrett Allen',
@@ -136,8 +141,9 @@ const players = [
     height: 6.9,
     position: ['C'],
     realTeam: 'Cleveland Cavaliers',
-    nbaFantasyTeam: '',
-    imgURL: '/assets/players/jarrett_allen.png',
+    nbaFantasyTeam: null,
+    imgURL:
+      'https://res.cloudinary.com/dwjwglwsq/image/upload/v1755244600/jarrett_allen_i48dg7.png',
     stats: {
       gp: 82,
       min: 28,
@@ -153,7 +159,7 @@ const players = [
       pf: 1.5,
       plusMinus: 6.3
     },
-    userProperty: ''
+    userProperty: null
   },
   {
     name: 'Karl-Anthony Towns',
@@ -162,8 +168,9 @@ const players = [
     height: 7,
     position: ['PF', 'C'],
     realTeam: 'New York Knicks',
-    nbaFantasyTeam: '',
-    imgURL: '/assets/players/karl_anthony_towns.png',
+    nbaFantasyTeam: null,
+    imgURL:
+      'https://res.cloudinary.com/dwjwglwsq/image/upload/v1755244597/karl_anthony_towns_ttktgk.png',
     stats: {
       gp: 72,
       min: 35,
@@ -179,7 +186,7 @@ const players = [
       pf: 3.5,
       plusMinus: 5.3
     },
-    userProperty: ''
+    userProperty: null
   },
   {
     name: 'Nikola Jokic',
@@ -188,8 +195,9 @@ const players = [
     height: 6.9,
     position: ['C'],
     realTeam: 'Denver Nuggets',
-    nbaFantasyTeam: '',
-    imgURL: '/assets/players/nikola_jokic.png',
+    nbaFantasyTeam: null,
+    imgURL:
+      'https://res.cloudinary.com/dwjwglwsq/image/upload/v1755244597/nikola_jokic_brqbpu.png',
     stats: {
       gp: 70,
       min: 36.7,
@@ -205,7 +213,7 @@ const players = [
       pf: 2.3,
       plusMinus: 8.5
     },
-    userProperty: ''
+    userProperty: null
   },
   {
     name: 'Domantas Sabonis',
@@ -214,8 +222,9 @@ const players = [
     height: 6.8,
     position: ['PF', 'C'],
     realTeam: 'Sacramento Kings',
-    nbaFantasyTeam: '',
-    imgURL: '/assets/players/domantas_sabonis.png',
+    nbaFantasyTeam: null,
+    imgURL:
+      'https://res.cloudinary.com/dwjwglwsq/image/upload/v1755244601/domantas_sabonis_roiahh.png',
     stats: {
       gp: 70,
       min: 34.7,
@@ -231,7 +240,7 @@ const players = [
       pf: 3.3,
       plusMinus: 2.1
     },
-    userProperty: ''
+    userProperty: null
   },
   {
     name: 'Brandon Miller',
@@ -240,8 +249,9 @@ const players = [
     height: 6.7,
     position: ['SF', 'PF'],
     realTeam: 'Charlotte Hornets',
-    nbaFantasyTeam: '',
-    imgURL: '/assets/players/brandon_miller.png',
+    nbaFantasyTeam: null,
+    imgURL:
+      'https://res.cloudinary.com/dwjwglwsq/image/upload/v1755244598/brandon_miller_xmq72m.png',
     stats: {
       gp: 27,
       min: 34.2,
@@ -257,7 +267,7 @@ const players = [
       pf: 2.7,
       plusMinus: -4.6
     },
-    userProperty: ''
+    userProperty: null
   },
   {
     name: 'Klay Thompson',
@@ -266,8 +276,9 @@ const players = [
     height: 6.5,
     position: ['SG'],
     realTeam: 'Dallas Mavericks',
-    nbaFantasyTeam: '',
-    imgURL: '/assets/players/klay_thompson.png',
+    nbaFantasyTeam: null,
+    imgURL:
+      'https://res.cloudinary.com/dwjwglwsq/image/upload/v1755244598/klay_thompson_abupqy.png',
     stats: {
       gp: 72,
       min: 27.3,
@@ -283,7 +294,7 @@ const players = [
       pf: 1.1,
       plusMinus: -1.1
     },
-    userProperty: ''
+    userProperty: null
   },
   {
     name: 'Victor Wembanyama',
@@ -292,8 +303,9 @@ const players = [
     height: 7.3,
     position: ['PF', 'C'],
     realTeam: 'San Antonio Spurs',
-    nbaFantasyTeam: '',
-    imgURL: '/assets/players/victor_wembanyama.png',
+    nbaFantasyTeam: null,
+    imgURL:
+      'https://res.cloudinary.com/dwjwglwsq/image/upload/v1755244597/victor_wembanyama_gjazdb.png',
     stats: {
       gp: 46,
       min: 33.2,
@@ -309,7 +321,7 @@ const players = [
       pf: 2.3,
       plusMinus: 2.2
     },
-    userProperty: ''
+    userProperty: null
   }
 ]
 
