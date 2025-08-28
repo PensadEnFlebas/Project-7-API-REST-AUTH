@@ -84,8 +84,8 @@ Recomendado: tener instalado **[Insomnia](https://insomnia.rest/)** o **[Postman
 Primero clona el repositorio:
 
 ```sh
-git clone https://github.com/PensadEnFlebas/Project-8-API-REST-FILES
-cd Project-8-API-REST-FILES
+git clone https://github.com/PensadEnFlebas/Project-7-API-REST-AUTH
+cd Project-7-API-REST-AUTH
 ```
 
 Instala las dependencias:
@@ -99,6 +99,12 @@ Crea un archivo .env en la raíz del proyecto:
 ```sh
 PORT=3000   # opcional
 DB_URL=mongodb+srv://<usuario>:<contraseña>@<cluster>.mongodb.net/nbafantasy
+🔐 Variables para autenticación JWT
+JWT_SECRET=tu_clave_secreta_para_tokens
+☁️ Variables de Cloudinary
+CLOUDINARY_API_KEY=tu_api_key
+CLOUDINARY_API_SECRET=tu_api_secret
+CLOUDINARY_CLOUD_NAME=tu_nombre_de_cloud
 ```
 
 Ejecuta el servidor en modo desarrollo:
@@ -115,6 +121,22 @@ npm run playersSeed
 ```
 
 ## 📡 Endpoints principales
+
+**Autenticación**
+MÉTODO | RUTA | DESCRIPCIÓN
+| ------ | ------ | ------ |
+POST | /api/v1/auth/register | Registro de nuevos usuarios |
+POST | /api/v1/auth/login | Autenticación de acceso a usuarios ya registrados |
+
+**Usuarios**
+MÉTODO | RUTA | PERMISOS | DESCRIPCIÓN
+| ------ | ------ | ------ | ------ |
+GET | /api/v1/users | Admin | Lista todos los usuarios |
+GET | /api/v1/users/:id | Admin | Obtiene un usuario por su ID |
+PUT | /api/v1/users/:id | User | Actualiza un usuario existente |
+PATCH | /api/v1/users/:id/remove-data-from-player-array | User | Borra elementos de los arrays |
+PATCH | /api/v1/users/:id/role | Admin | Cambia el rol de un usuario |
+DELETE | /api/v1/users/:id | User | Elimina un usuario (usuarios solo a sí mismos) |
 
 **Jugadores**
 MÉTODO | RUTA | PERMISOS | DESCRIPCIÓN
@@ -135,22 +157,6 @@ POST | /api/v1/teams | User | Crea un nuevo equipo |
 PUT | /api/v1/teams/:id | User | Actualiza un equipo existente |
 PATCH | /api/v1/teams/:id/remove-data-from-player-array | User | Borra elementos de los arrays |
 DELETE | /api/v1/teams/:id | User | Elimina un equipo |
-
-**Usuarios**
-MÉTODO | RUTA | PERMISOS | DESCRIPCIÓN
-| ------ | ------ | ------ | ------ |
-GET | /api/v1/users | Admin | Lista todos los usuarios |
-GET | /api/v1/users/:id | Admin | Obtiene un usuario por su ID |
-PUT | /api/v1/users/:id | User | Actualiza un usuario existente |
-PATCH | /api/v1/users/:id/remove-data-from-player-array | User | Borra elementos de los arrays |
-PATCH | /api/v1/users/:id/role | Admin | Cambia el rol de un usuario |
-DELETE | /api/v1/users/:id | User | Elimina un usuario (usuarios solo a sí mismos) |
-
-**Autenticación**
-MÉTODO | RUTA | DESCRIPCIÓN
-| ------ | ------ | ------ |
-POST | /api/v1/auth/register | Registro de nuevos usuarios |
-POST | /api/v1/auth/login | Autenticación de acceso a usuarios ya registrados |
 
 ## 🖼️ Gestión de imágenes
 
@@ -173,5 +179,5 @@ Al enviar una petición POST o PUT a los endpoints correspondientes _players, te
 ## 📬 Autor
 
 ```bash
-Creado por Juanma "Goblin" Martínez como proyecto 8 de Rock-The-Code.
+Creado por Juanma "Goblin" Martínez como proyecto 7 de Rock-The-Code.
 ```

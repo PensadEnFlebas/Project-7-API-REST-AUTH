@@ -64,4 +64,7 @@ const playerSchema = new mongoose.Schema(
   { timestamps: true, collection: 'players' }
 )
 
-module.exports = mongoose.model('Player', playerSchema)
+module.exports = {
+  Player: mongoose.model('Player', playerSchema),
+  ALLOWED_POSITIONS
+}

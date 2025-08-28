@@ -14,7 +14,10 @@ exports.getAllUsers = async (req, res) => {
       })
     return res.status(200).json(users)
   } catch (error) {
-    return res.status(400).json('Ha ocurrido un error ❌')
+    console.error('Error en getAllUsers:', error)
+    return res
+      .status(400)
+      .json('Ha ocurrido un error recopilando todos los usuarios ❌')
   }
 }
 
@@ -39,7 +42,7 @@ exports.getUserById = async (req, res) => {
 
     return res.status(200).json(user)
   } catch (error) {
-    console.error(error)
+    console.error('Error en getUserById:', error)
     return res.status(500).json('Error al obtener el usuario ❌')
   }
 }
@@ -64,24 +67,35 @@ exports.updateUser = async (req, res) => {
     const userToUpdate = await User.findById(id)
     if (!userToUpdate) return res.status(404).json('Usuario no encontrado ❌')
 
-    if (req.file) {
-      if (userToUpdate.avatarURL) deleteImgCloudinary(userToUpdate.avatarURL)
-      updates.avatarURL = req.file.path
+    const newAvatar = req.file?.path || updates.avatarURL
+    if (newAvatar && newAvatar !== userToUpdate.avatarURL) {
+      if (userToUpdate.avatarURL) {
+        try {
+          await deleteImgCloudinary(userToUpdate.avatarURL)
+        } catch (err) {
+          console.error('Error borrando avatar previo:', err)
+          return res
+            .status(400)
+            .json('No se pudo eliminar el avatar anterior de Cloudinary ❌')
+        }
+      }
+      updates.avatarURL = newAvatar
     }
 
-    const userUpdated = await User.findByIdAndUpdate(id, updates, {
-      new: true
+    Object.keys(updates).forEach((key) => {
+      if (key in userToUpdate) {
+        userToUpdate[key] = updates[key]
+      }
     })
 
-    if (!userUpdated) {
-      return res.status(404).json('Usuario no encontrado ❌')
-    }
+    const userUpdated = await userToUpdate.save()
 
-    return res.status(201).json({
+    return res.status(200).json({
       message: 'Usuario actualizado ✅',
       user: userUpdated
     })
   } catch (error) {
+    console.error('Error en updateUser:', error)
     return res
       .status(400)
       .json('Ha ocurrido un error actualizando el usuario ❌')
@@ -120,6 +134,7 @@ exports.removeDataFromUserArray = async (req, res) => {
 
     return res.status(200).json({ message: 'Dato borrado del array ✅', user })
   } catch (error) {
+    console.error('Error en removeDataFromUserArray:', error)
     return res.status(500).json('Error al eliminar el dato del usuario ❌')
   }
 }
@@ -142,11 +157,23 @@ exports.deleteUser = async (req, res) => {
       return res.status(404).json('Usuario no encontrado ❌')
     }
 
+    if (userDeleted.imgURL) {
+      try {
+        await deleteImgCloudinary(userDeleted.imgURL)
+      } catch (error) {
+        console.error('Error borrando avatar previo:', err)
+        return res
+          .status(400)
+          .json('No se pudo eliminar la imagen de Cloudinary ❌')
+      }
+    }
+
     return res.status(201).json({
       message: 'Usuario eliminado ✅',
       userDeleted: userDeleted
     })
   } catch (error) {
+    console.error('Error en deleteUser:', error)
     return res
       .status(400)
       .json('Ha ocurrido un error al eliminar el usuario ❌')
@@ -173,6 +200,7 @@ exports.changeUserRole = async (req, res) => {
       user: updatedRole
     })
   } catch (error) {
+    console.error('Error en changeUserRole:', error)
     return res.status(400).json('Error actualizando rol de usuario ❌')
   }
 }

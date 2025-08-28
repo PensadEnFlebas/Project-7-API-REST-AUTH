@@ -8,10 +8,15 @@ exports.getAllPlayers = async (req, res) => {
   try {
     const players = await Player.find().populate({
       path: 'userProperty',
-      populate: [{ path: 'players' }, { path: 'team' }]
+      select: 'name email nickname team players',
+      populate: [
+        { path: 'team', select: 'name shieldURL' },
+        { path: 'players', select: 'name position imgURL' }
+      ]
     })
     return res.status(200).json(players)
   } catch (error) {
+    console.error('Error en getAllPlayers:', error)
     return res
       .status(400)
       .json('Ha ocurrido un error recopilando todos los jugadores ❌')
@@ -37,6 +42,7 @@ exports.getPlayerById = async (req, res) => {
 
     return res.status(200).json(player)
   } catch (error) {
+    console.error('Error en getPlayerById:', error)
     return res.status(400).json('Error al obtener el jugador ❌')
   }
 }
@@ -49,9 +55,14 @@ exports.createPlayer = async (req, res) => {
       newPlayer.imgURL = req.file.path
     }
 
+    if (req.body.imgURL && !req.file) {
+      newPlayer.imgdURL = req.body.imgdURL
+    }
+
     const playerSaved = await newPlayer.save()
-    return res.status(201).json(playerSaved)
+    return res.status(201).json('Jugador creado correctamente ✅', playerSaved)
   } catch (error) {
+    console.error('Error en createPlayer:', error)
     return res.status(400).json('Ha ocurrido un error al crear un jugador ❌')
   }
 }
@@ -64,18 +75,38 @@ exports.updatePlayer = async (req, res) => {
       return res.status(400).json('ID no válido ❌')
     }
 
-    const updatedPlayer = await Player.findByIdAndUpdate(id, data, {
-      new: true,
-      runValidators: true
+    const player = await Player.findById(id)
+    if (!player) return res.status(404).json('Jugador no encontrado ❌')
+
+    const newImg = req.file?.path || req.body.imgURL
+    if (newImg && newImg !== player.imgURL) {
+      if (player.imgURL) {
+        try {
+          await deleteImgCloudinary(player.imgURL)
+        } catch (err) {
+          return res
+            .status(400)
+            .json('No se pudo eliminar la imagen anterior de Cloudinary ❌')
+        }
+      }
+
+      player.imgURL = newImg
+    }
+
+    Object.keys(req.body).forEach((key) => {
+      if (key in player) {
+        player[key] = req.body[key]
+      }
     })
 
-    if (!updatedPlayer) return res.status(404).json('Jugador no encontrado ❌')
+    const playerUpdated = await player.save()
 
     res.status(200).json({
-      message: `Jugador ${updatedPlayer.name} actualizado correctamente ✅`,
-      player: updatedPlayer
+      message: `Jugador ${playerUpdated.name} actualizado correctamente ✅`,
+      playerUpdated
     })
   } catch (error) {
+    console.error('Error en updatePlayer:', error)
     res.status(400).json('Error al actualizar el jugador ❌')
   }
 }
@@ -109,6 +140,7 @@ exports.removeDataFromPlayerArray = async (req, res) => {
       .status(200)
       .json({ message: 'Dato borrado ok del array ✅', player })
   } catch (error) {
+    console.error('Error en removeDataFromPlayerArray:', error)
     return res.status(500).json('Error al eliminar el dato del jugador ❌')
   }
 }
@@ -128,13 +160,21 @@ exports.deletePlayer = async (req, res) => {
     }
 
     if (playerDeleted.imgURL) {
-      await deleteImgCloudinary(playerDeleted.imgURL)
+      try {
+        await deleteImgCloudinary(playerDeleted.imgURL)
+      } catch (error) {
+        console.error('Error borrando imagen previa:', err)
+        return res
+          .status(400)
+          .json('No se pudo eliminar la imagen de Cloudinary ❌')
+      }
     }
 
     return res
       .status(200)
       .json({ message: 'Jugador borrado ✅', playerDeleted })
   } catch (error) {
+    console.error('Error en deletePlayer:', error)
     return res.status(400).json('Ha ocurrido un error eliminando el jugador ❌')
   }
 }
