@@ -56,7 +56,7 @@ exports.createPlayer = async (req, res) => {
     }
 
     if (req.body.imgURL && !req.file) {
-      newPlayer.imgdURL = req.body.imgdURL
+      newPlayer.imgURL = req.body.imgURL
     }
 
     const playerSaved = await newPlayer.save()

@@ -48,6 +48,7 @@ exports.register = async (req, res) => {
       }
     })
   } catch (error) {
+    console.error('Error en register:', error)
     return res.status(500).json({ message: 'Error en registro ❌', error })
   }
 }
@@ -88,6 +89,7 @@ exports.login = async (req, res) => {
       }
     })
   } catch (error) {
+    console.error('Error en login:', error)
     return res.status(500).json({ message: 'Error en login ❌', error })
   }
 }
