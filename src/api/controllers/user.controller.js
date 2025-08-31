@@ -157,9 +157,9 @@ exports.deleteUser = async (req, res) => {
       return res.status(404).json('Usuario no encontrado ❌')
     }
 
-    if (userDeleted.imgURL) {
+    if (userDeleted.avatarURL) {
       try {
-        await deleteImgCloudinary(userDeleted.imgURL)
+        await deleteImgCloudinary(userDeleted.avatarURL)
       } catch (error) {
         console.error('Error borrando avatar previo:', err)
         return res
