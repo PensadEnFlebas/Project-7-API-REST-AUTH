@@ -134,7 +134,7 @@ MÉTODO | RUTA | PERMISOS | DESCRIPCIÓN
 GET | /api/v1/users | Admin | Lista todos los usuarios |
 GET | /api/v1/users/:id | Admin | Obtiene un usuario por su ID |
 PUT | /api/v1/users/:id | User | Actualiza un usuario existente |
-PATCH | /api/v1/users/:id/remove-data-from-player-array | User | Borra elementos de los arrays |
+PATCH | /api/v1/users/:id/remove-data-from-user-array | User | Borra elementos de los arrays |
 PATCH | /api/v1/users/:id/role | Admin | Cambia el rol de un usuario |
 DELETE | /api/v1/users/:id | User | Elimina un usuario (usuarios solo a sí mismos) |
 
@@ -155,7 +155,7 @@ GET | /api/v1/teams | User | Lista todos los equipos |
 GET | /api/v1/teams/:id | User | Obtiene un equipo por su ID |
 POST | /api/v1/teams | User | Crea un nuevo equipo |
 PUT | /api/v1/teams/:id | User | Actualiza un equipo existente |
-PATCH | /api/v1/teams/:id/remove-data-from-player-array | User | Borra elementos de los arrays |
+PATCH | /api/v1/teams/:id/remove-data-from-team-array | User | Borra elementos de los arrays |
 DELETE | /api/v1/teams/:id | User | Elimina un equipo |
 
 ## 🖼️ Gestión de imágenes

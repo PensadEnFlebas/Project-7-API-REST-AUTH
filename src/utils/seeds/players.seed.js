@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const Player = require('../../api/models/player.model')
+const { Player } = require('../../api/models/player.model')
 const players = require('../../data/players.data')
 require('dotenv').config()
 

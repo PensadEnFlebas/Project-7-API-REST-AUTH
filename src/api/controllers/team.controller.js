@@ -126,22 +126,23 @@ exports.updateTeam = async (req, res) => {
 exports.removeDataFromTeamArray = async (req, res) => {
   try {
     const { id } = req.params
-    const team = await Team.findById(id)
-    const isOwner = team.userProperty.toString() === req.user.id
-    const { field, value } = req.body
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json('ID de usuario no válido ❌')
     }
 
+    const team = await Team.findById(id)
+    team = await Team.findById(id)
+    if (!team) return res.status(404).json('Equipo no encontrado ❌')
+
+    const isOwner = team.userProperty.toString() === req.user.id
     if (!isOwner) {
       return res
         .status(403)
         .json('No tienes permisos para eliminar datos de este equipo ❌')
     }
 
-    team = await Team.findById(id)
-    if (!team) return res.status(404).json('Equipo no encontrado ❌')
+    const { field, value } = req.body
 
     if (!Array.isArray(team[field])) {
       return res.status(400).json(`${field} no es un array ❌`)
@@ -161,11 +162,18 @@ exports.deleteTeam = async (req, res) => {
   try {
     const { id } = req.params
 
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json('ID de equipo no válido ❌')
+    }
+
     const team = await Team.findById(id)
     if (!team) return res.status(404).json('Equipo no encontrado ❌')
 
-    const isAdmin = req.user.role === 'admin'
-    const isOwner = team.userProperty.toString() === req.user.id
+    const isAdmin = req.user?.role === 'admin'
+    const isOwner =
+      team.userProperty && req.user
+        ? team.userProperty.toString() === req.user.id
+        : false
 
     if (!isAdmin && !isOwner) {
       return res
@@ -179,11 +187,11 @@ exports.deleteTeam = async (req, res) => {
       return res.status(404).json('Equipo no encontrado ❌')
     }
 
-    if (teamDeleted.imgURL) {
+    if (teamDeleted.shieldURL) {
       try {
-        await deleteImgCloudinary(teamDeleted.imgURL)
+        await deleteImgCloudinary(teamDeleted.shieldURL)
       } catch (error) {
-        console.error('Error borrando escudo previo:', err)
+        console.error('Error borrando escudo previo:', error)
         return res
           .status(400)
           .json('No se pudo eliminar la imagen de Cloudinary ❌')

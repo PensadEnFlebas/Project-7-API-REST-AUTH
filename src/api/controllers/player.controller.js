@@ -60,7 +60,9 @@ exports.createPlayer = async (req, res) => {
     }
 
     const playerSaved = await newPlayer.save()
-    return res.status(201).json('Jugador creado correctamente ✅', playerSaved)
+    return res
+      .status(201)
+      .json({ message: 'Jugador creado correctamente ✅', playerSaved })
   } catch (error) {
     console.error('Error en createPlayer:', error)
     return res.status(400).json('Ha ocurrido un error al crear un jugador ❌')

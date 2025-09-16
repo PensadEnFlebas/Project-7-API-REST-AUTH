@@ -125,7 +125,7 @@ exports.removeDataFromUserArray = async (req, res) => {
       return res.status(400).json(`${field} no es un array ❌`)
     }
 
-    if (field === 'roles' && user[field].length <= 1) {
+    if (field === 'role' && user[field].length <= 1) {
       return res.status(400).json('❌ El usuario debe tener al menos un rol')
     }
 
@@ -196,11 +196,11 @@ exports.changeUserRole = async (req, res) => {
     )
     return res.status(200).json({
       message: 'Rol actualizado ✅',
-      nickname: updatedUser.nickname,
+      nickname: updatedRole.nickname,
       user: updatedRole
     })
   } catch (error) {
     console.error('Error en changeUserRole:', error)
-    return res.status(400).json('Error actualizando rol de usuario ❌')
+    return res.status(500).json('Error actualizando rol de usuario ❌')
   }
 }
